@@ -1,0 +1,52 @@
+// Entity in Gosu ...
+@Entity
+class User {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  var _id : Long
+  var _name : String
+  var _email : String
+
+  // Getters and setters
+  property get Id() : Long { return _id }
+  property set Id(value : Long) { _id = value }
+  
+  property get Name() : String { return _name }
+  property set Name(value : String) { _name = value }
+  
+  property get Email() : String { return _email }
+  property set Email(value : String) { _email = value }
+}
+
+// Service in Gosu
+@Service
+class UserService {
+  @Autowired
+  var _userRepository : UserRepository
+
+  function getAllUsers() : List<User> {
+    return _userRepository.findAll()
+  }
+
+  function getUserById(id : Long) : User {
+    return _userRepository.findById(id).orElse(null)
+  }
+
+  function createUser(user : User) : User {
+    return _userRepository.save(user)
+  }
+
+  function updateUser(id : Long, userDetails : User) : User {
+    var user = _userRepository.findById(id).orElse(null)
+    if (user != null) {
+      user.Name = userDetails.Name
+      user.Email = userDetails.Email
+      return _userRepository.save(user)
+    }
+    return null
+  }
+
+  function deleteUser(id : Long) {
+    _userRepository.deleteById(id)
+  }
+}
